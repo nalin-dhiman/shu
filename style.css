@@ -1,6 +1,8 @@
 :root {
-    --bg-color: #0a1014; /* Deep midnight/ink blue */
-    --paper-color: #f5e6d3; /* Parchment */
+    --bg-color: #0a1014;
+    /* Deep midnight/ink blue */
+    --paper-color: #f5e6d3;
+    /* Parchment */
     --gold-accent: #d4af37;
     --text-primary: #e0d0b0;
     --text-secondary: #a09070;
@@ -38,7 +40,9 @@ body {
 }
 
 /* Typography Defaults */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-family: var(--font-heading);
     font-weight: 400;
     color: var(--paper-color);
@@ -82,7 +86,8 @@ p {
     margin-bottom: 1rem;
     color: var(--gold-accent);
     text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-    min-height: 1.2em; /* Prevent layout shift */
+    min-height: 1.2em;
+    /* Prevent layout shift */
 }
 
 #hero-subtitle {
@@ -101,7 +106,9 @@ p {
 }
 
 @keyframes blink {
-    50% { opacity: 0; }
+    50% {
+        opacity: 0;
+    }
 }
 
 .scroll-indicator {
@@ -142,7 +149,8 @@ p {
     display: flex;
     flex-direction: column;
     gap: 3rem;
-    opacity: 0; /* JS Fade in */
+    opacity: 0;
+    /* JS Fade in */
     transform: translateY(20px);
     transition: opacity 1s ease, transform 1s ease;
 }
@@ -204,10 +212,11 @@ p {
     break-inside: avoid;
     margin-bottom: 2rem;
     position: relative;
-    border: 8px solid #fbfbf8; /* Polaroid/Frame style */
+    border: 8px solid #fbfbf8;
+    /* Polaroid/Frame style */
     border-bottom-width: 24px;
     border-radius: 2px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     background-color: #fbfbf8;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -216,7 +225,7 @@ p {
 
 .gallery-item:hover {
     transform: scale(1.02) rotate(-1deg);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     z-index: 10;
 }
 
@@ -224,7 +233,8 @@ p {
     width: 100%;
     height: auto;
     display: block;
-    filter: sepia(20%) contrast(90%); /* Vintage feel */
+    filter: sepia(20%) contrast(90%);
+    /* Vintage feel */
     transition: filter 0.3s ease;
 }
 
@@ -294,9 +304,17 @@ p {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    }
 }
 
 /* Responsive */
@@ -310,17 +328,63 @@ p {
     #hero-title {
         font-size: 2rem;
     }
+
     .gallery {
         column-count: 1;
     }
+
     .chapter h2 {
         font-size: 2rem;
     }
+
     .chapter-intro {
         font-size: 1.1rem;
     }
+
     .gallery-item {
         border-width: 6px;
         border-bottom-width: 18px;
     }
+}
+
+/* Lock Screen */
+#lock-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    z-index: 9999;
+    /* Highest priority */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: opacity 1s ease;
+}
+
+#lock-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lock-content h1 {
+    font-size: 4rem;
+    color: var(--gold-accent);
+    margin-bottom: 2rem;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+}
+
+.lock-content p {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.lock-content #countdown {
+    margin-top: 2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    color: var(--text-primary);
 }

@@ -199,24 +199,89 @@ musicToggle.addEventListener('click', () => {
     isPlaying = !isPlaying;
 });
 
-// --- Initialization ---
-window.addEventListener('load', () => {
+// --- Birthday Lock & Timer ---
+function initLockSystem() {
+    const lockScreen = document.getElementById('lock-screen');
+    const countdownEl = document.getElementById('countdown');
+    const currentYear = new Date().getFullYear();
+
+    // Target: Feb 9th 00:00:00 of the current year
+    // Note: Month is 0-indexed (0=Jan, 1=Feb)
+    let targetDate = new Date(currentYear, 1, 9, 0, 0, 0);
+
+    // If today is already past Feb 9th this year, we should unlock
+    // (Assuming the lock is only relevant for the upcoming birthday)
+    if (new Date() >= targetDate) {
+        unlockSite();
+        return;
+    }
+
+    // If not, show lock and start timer
+    lockScreen.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Update timer every second
+    const timerInterval = setInterval(() => {
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+            // Time reached!
+            clearInterval(timerInterval);
+            unlockSite();
+        } else {
+            // Format time
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownEl.innerHTML = `
+                <span class="timer-segment">${days}d</span> : 
+                <span class="timer-segment">${hours}h</span> : 
+                <span class="timer-segment">${minutes}m</span> : 
+                <span class="timer-segment">${seconds}s</span>
+            `;
+        }
+    }, 1000);
+}
+
+function unlockSite() {
+    const lockScreen = document.getElementById('lock-screen');
+    if (!lockScreen.classList.contains('hidden')) {
+        lockScreen.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        startSiteAnimations();
+    } else {
+        startSiteAnimations();
+    }
+}
+
+function startSiteAnimations() {
     resizeCanvas();
     animateParticles();
 
     // Start Typewriter
     setTimeout(() => {
+        // Reset content to be sure
+        heroTitle.innerHTML = "";
+        heroSubtitle.style.opacity = 0;
+
         typeWriter(heroTitle, CONFIG.hero.headline, 100, () => {
-            // After title, type subtitle
             setTimeout(() => {
                 heroSubtitle.textContent = CONFIG.hero.subHeadline;
                 heroSubtitle.style.opacity = 1;
             }, 500);
         });
-    }, 1000);
+    }, 500);
 
     renderChapters();
     initObserver();
+}
+
+// --- Initialization ---
+window.addEventListener('load', () => {
+    initLockSystem();
 });
 
 window.addEventListener('resize', resizeCanvas);
