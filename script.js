@@ -112,6 +112,11 @@ function typeWriter(element, text, speed = 100, callback) {
 
 // --- Content Rendering ---
 function renderChapters() {
+    if (typeof CONFIG === 'undefined' || !CONFIG.chapters) {
+        console.error("CONFIG or CONFIG.chapters is undefined");
+        return;
+    }
+
     CONFIG.chapters.forEach((chapter, index) => {
         const section = document.createElement('section');
         section.classList.add('chapter');
@@ -193,7 +198,8 @@ musicToggle.addEventListener('click', () => {
             musicToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
         }).catch(e => {
             console.log("Autoplay prevented or no source", e);
-            alert("Please ensure an audio file is present in assets/music.mp3");
+            // Alert removed to avoid annoying user if they forgot file
+            console.warn("Please ensure an audio file is present in assets/music.mp3");
         });
     }
     isPlaying = !isPlaying;
@@ -210,7 +216,6 @@ function initLockSystem() {
     let targetDate = new Date(currentYear, 1, 9, 0, 0, 0);
 
     // If today is already past Feb 9th this year, we should unlock
-    // (Assuming the lock is only relevant for the upcoming birthday)
     if (new Date() >= targetDate) {
         unlockSite();
         return;
@@ -220,14 +225,16 @@ function initLockSystem() {
     lockScreen.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 
-    // Update timer every second
-    const timerInterval = setInterval(() => {
+    let timerInterval = null;
+
+    // Timer update function
+    const updateTimer = () => {
         const now = new Date();
         const diff = targetDate - now;
 
         if (diff <= 0) {
             // Time reached!
-            clearInterval(timerInterval);
+            if (timerInterval) clearInterval(timerInterval);
             unlockSite();
         } else {
             // Format time
@@ -243,7 +250,13 @@ function initLockSystem() {
                 <span class="timer-segment">${seconds}s</span>
             `;
         }
-    }, 1000);
+    };
+
+    // Run immediately to avoid delay
+    updateTimer();
+
+    // Then every second
+    timerInterval = setInterval(updateTimer, 1000);
 }
 
 function unlockSite() {
